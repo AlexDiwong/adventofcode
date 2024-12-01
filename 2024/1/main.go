@@ -73,18 +73,7 @@ func similarity(l, r []int) int {
 }
 
 func agg(r []int) map[int]int {
-    res := map[int]int {
-        0: 0,
-        1: 0,
-        2: 0,
-        3: 0,
-        4: 0,
-        5: 0,
-        6: 0,
-        7: 0,
-        8: 0,
-        9: 0,
-    }
+    res := make(map[int]int,0)
     for _, v := range r {
         res[v] += 1
     }
