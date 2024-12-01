@@ -23,3 +23,9 @@ go.work.sum
 
 # env file
 .env
+
+# Ignore input files
+input.txt
+
+#ginore built main file
+main
