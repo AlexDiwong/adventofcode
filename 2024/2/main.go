@@ -63,8 +63,17 @@ func calcSafe(l [][]int) int {
 func calcSafeWithDamp(l [][]int) int {
 	cnt := 0
 	for _, i := range l {
-		if isSafeWithDamp(i) {
-			cnt++
+        safe := false
+        for j:= 0; j < len(i); j++ {
+            cpy := make([]int, 0)
+            cpy = append(cpy, i[:j]...)
+            if j < len(i) {
+                cpy = append(cpy, i[j+1:]...)
+            }
+            safe = safe || isSafe(cpy)
+        }
+        if safe {
+            cnt++
 		}
 	}
 	return cnt
@@ -88,42 +97,6 @@ func isSafe(i []int) bool {
 		} else {
 			if dst > -1 || dst < -3 {
                 return false
-			}
-		}
-		old = i[j]
-	}
-	return true
-}
-
-func isSafeWithDamp(i []int) bool {
-	damp := true
-	if len(i) < 2 {
-		return false
-	}
-	inc := false
-	if i[0] < i[1] {
-		inc = true
-	}
-	old := i[0]
-	for j := 1; j < len(i); j++ {
-		dst := i[j] - old
-		if inc {
-			if dst < 1 || dst > 3 {
-				if damp {
-					damp = false
-					continue
-				} else {
-					return false
-				}
-			}
-		} else {
-			if dst > -1 || dst < -3 {
-				if damp {
-					damp = false
-					continue
-				} else {
-					return false
-				}
 			}
 		}
 		old = i[j]
