@@ -11,11 +11,12 @@ import (
 )
 
 func main() {
-	fmt.Println("Calculating safe reports...")
+	fmt.Println("Calculating muls...")
 	i := readInput()
-    fmt.Println(i[0])
     cnt := sumMul(i)
     fmt.Println(cnt)
+    cntDo := sumMulDo(i)
+    fmt.Println(cntDo)
 }
 
 func readInput() []string {
@@ -53,6 +54,45 @@ func sumMul(s []string) int {
     sum :=0
     for i :=0; i < len(s); i++ {
         sum += parseMul(s[i])
+    }
+    return sum
+}
+
+func sumMulDo(s []string) int {
+    sum :=0
+    active := true
+    for i :=0; i < len(s); i++ {
+        sum += parseMulDo2(active, s[i])
+    }
+    return sum
+}
+
+func parseMulDo(s string) int {
+    a := strings.Split(s, "do()")
+    sum := 0
+    for i := 0; i < len(a); i++ {
+        do := strings.Split(a[i], "don't()")[0]
+        sum += parseMul(do)
+    }
+    return sum
+}
+
+func parseMulDo2(active bool, s string) int {
+    re := regexp.MustCompile(`mul\(\d+,\d+\)|don't\(\)|do\(\)`)
+    parsed := re.FindAll([]byte(s), -1)
+    // active := true
+    sum := 0
+    for _, p := range parsed {
+        f := string(p)
+        if f == "do()" {
+            active = true
+        } else if f == "don't()" {
+            active = false
+        } else {
+            if active {
+                sum += calcMul(f)
+            }
+        }
     }
     return sum
 }
