@@ -1,13 +1,53 @@
 package main
 
-// import (
-// 	"github.com/stretchr/testify/assert"
-// 	"testing"
-// )
-//
-// func TestMul(t *testing.T) {
-//     s:= "xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))"
-// 	want := 161
-// 	assert.Equal(t, want, parseMul(s))
-// }
+import (
+	"strings"
+	"testing"
 
+	"github.com/stretchr/testify/assert"
+)
+
+func TestWalk(t *testing.T) {
+	s := "MMMSXXMASM\n"+
+        "MSAMXMSMSA\n"+
+        "AMXSXMAAMM\n"+
+        "MSAMASMSMX\n"+
+        "XMASAMXAMM\n"+
+        "XXAMMXXAMA\n"+
+        "SMSMSASXSS\n"+
+        "SAXAMASAAA\n"+
+        "MAMMMXMMMM\n"+
+        "MXMXAXMASX"
+    inp := parse(s)
+	want := 18
+	assert.Equal(t, want, walk(inp))
+}
+
+func TestWalkMas(t *testing.T) {
+	s := "MMMSXXMASM\n"+
+        "MSAMXMSMSA\n"+
+        "AMXSXMAAMM\n"+
+        "MSAMASMSMX\n"+
+        "XMASAMXAMM\n"+
+        "XXAMMXXAMA\n"+
+        "SMSMSASXSS\n"+
+        "SAXAMASAAA\n"+
+        "MAMMMXMMMM\n"+
+        "MXMXAXMASX"
+    inp := parse(s)
+	want := 9
+	assert.Equal(t, want, walkMas(inp))
+}
+
+func parse(s string) [][]string {
+	spl := strings.Split(s, "\n")
+	ret := make([][]string, 0)
+    for i := 0; i < len(spl); i++ {
+        tmp := make([]string, 0)
+        for _, v := range spl[i] {
+            tmp = append(tmp, string(v))
+        }
+        ret = append(ret, tmp)
+    }
+	return ret
+}
