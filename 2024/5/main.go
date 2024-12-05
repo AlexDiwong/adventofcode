@@ -10,11 +10,13 @@ import (
 )
 
 func main() {
-	fmt.Println("Calculating muls...")
+	fmt.Println("Calculating valid...")
 	rules := readInput("5a.txt", "|")
 	pages := readInput("5b.txt", ",")
-	fmt.Println(rules)
-	fmt.Println(pages)
+	cnt := countValid(rules, pages)
+	fmt.Println(cnt)
+	cntFixed := countFixInvalid(rules, pages)
+	fmt.Println(cntFixed)
 }
 
 func readInput(f, div string) [][]string {
@@ -39,13 +41,57 @@ func readInput(f, div string) [][]string {
 }
 
 func countValid(rules, pages [][]string) int {
-    sum := 0 
-    for _, p := range pages {
+	sum := 0
+	for _, p := range pages {
+		if seqValid(rules, p) {
+			sum += castInt(p[len(p)/2])
+		}
+	}
+	return sum
+}
+
+func countFixInvalid(rules, pages [][]string) int {
+	sum := 0
+    length := len(pages)
+	for i, p := range pages {
+        fmt.Println("Working on page", i, length)
+		if a := seqFixInvalid(rules, p); len(a) > 0 {
+			sum += castInt(a[len(a)/2])
+		}
+	}
+	return sum
+}
+
+func seqFixInvalid(rules [][]string, page []string) []string {
+	for _, r := range rules {
+		a := indexOf(page, r[0])
+		b := indexOf(page, r[1])
+		if a != -1 && b != -1 && a > b {
+			c := fixInvalid(rules, page)
+			return c
+		}
+	}
+	return make([]string, 0)
+}
+
+func fixInvalid(rules [][]string, page []string) []string {
+    for i := 0; i < len(page); i++ {
         if seqValid(rules, p) {
-            sum += castInt(p[len(p)/2])
+            return p
         }
     }
-	return 0
+	return make([]string, 0)
+}
+
+func seqValid(rules [][]string, page []string) bool {
+	for _, r := range rules {
+		a := indexOf(page, r[0])
+		b := indexOf(page, r[1])
+		if a != -1 && b != -1 && a > b {
+			return false
+		}
+	}
+	return true
 }
 
 func castInt(s string) int {
@@ -55,6 +101,20 @@ func castInt(s string) int {
 	return 0
 }
 
-func seqValid(rules [][]string, page []string) bool {
-    return true
+func removeIndex(s []string, i int) (string, []string) {
+	r := make([]string, 0)
+	r = append(r, s[:i]...)
+	if i < len(s)-1 {
+		r = append(r, s[i+1:]...)
+	}
+	return s[i], r
+}
+
+func indexOf(s []string, t string) int {
+	for p, v := range s {
+		if v == t {
+			return p
+		}
+	}
+	return -1
 }
